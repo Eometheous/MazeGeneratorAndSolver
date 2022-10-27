@@ -1,5 +1,5 @@
 package main;
-// Hello, from Aaron
+
 import main.mazes.Maze;
 
 public class Main {
