@@ -1,13 +1,18 @@
 package main;
 
 import main.graphs.AdjacencyListGraph;
+import main.linkedLists.LinkedList;
 import main.mazes.Maze;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class MazeSolverTest {
+import static org.junit.jupiter.api.Assertions.*;
+
+public class MazeSolverDFSTest {
     private static final AdjacencyListGraph mazeGraph = new AdjacencyListGraph(30);
     private static Maze testMaze;
+
+    private static final LinkedList expectedPath = new LinkedList();
     @BeforeAll
     static void createMaze() {
         // add paths to testMaze
@@ -41,6 +46,23 @@ public class MazeSolverTest {
         mazeGraph.addEdge(23,24);
         mazeGraph.addEdge(24,29);
 
+        expectedPath.add(29);
+        expectedPath.add(24);
+        expectedPath.add(23);
+        expectedPath.add(28);
+        expectedPath.add(27);
+        expectedPath.add(22);
+        expectedPath.add(17);
+        expectedPath.add(18);
+        expectedPath.add(19);
+        expectedPath.add(14);
+        expectedPath.add(13);
+        expectedPath.add(12);
+        expectedPath.add(7);
+        expectedPath.add(6);
+        expectedPath.add(1);
+        expectedPath.add(0);
+
         // create testMaze with testGraph
         testMaze = new Maze(mazeGraph, 5, 6);
     }
@@ -48,5 +70,14 @@ public class MazeSolverTest {
     @Test
     public void TestDisplay() {
         testMaze.display();
+    }
+    @Test
+    public void TestDFSMazeSolver() {
+        assertEquals(expectedPath.numberOfItems(), 16);
+    }
+
+    @Test
+    public void TestBFSMazeSolver() {
+
     }
 }
