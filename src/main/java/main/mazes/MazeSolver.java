@@ -26,4 +26,9 @@ public class MazeSolver {
         // do DFS to find the maze solution
         return DFS.DepthFirstSearch(maze,visited,startingCoords);
     }
+
+    public static LinkedList solveMazeUsingBFS(Maze maze) {
+        //TODO make BFS algorithm that solves a maze
+        return null;
+    }
 }
