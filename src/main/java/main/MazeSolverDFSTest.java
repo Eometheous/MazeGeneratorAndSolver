@@ -1,7 +1,10 @@
 package main;
 
+import main.mazes.MazeSolver;
 import main.graphs.AdjacencyListGraph;
 import main.linkedLists.LinkedList;
+import main.linkedLists.Node;
+import main.mazes.Coordinate;
 import main.mazes.Maze;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -73,6 +76,19 @@ public class MazeSolverDFSTest {
     }
     @Test
     public void TestDFSMazeSolver() {
-        assertEquals(expectedPath.numberOfItems(), 16);
+        // solve the maze and return the path
+        LinkedList path = MazeSolver.solveMazeUsingDFS(testMaze);
+
+        // make sure path length is = expected path length
+        assertEquals(expectedPath.numberOfItems(), path.numberOfItems());
+
+        // make sure nodes in path are = expected nodes
+        Node expectedNode = expectedPath.getHead();
+        Node actualNode = path.getHead();
+        while (expectedNode != null && actualNode != null) {
+            assertEquals(expectedNode.getItem(),actualNode.getItem());
+            expectedNode = expectedNode.getNext();
+            actualNode = actualNode.getNext();
+        }
     }
 }
