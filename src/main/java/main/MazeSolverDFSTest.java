@@ -75,9 +75,4 @@ public class MazeSolverDFSTest {
     public void TestDFSMazeSolver() {
         assertEquals(expectedPath.numberOfItems(), 16);
     }
-
-    @Test
-    public void TestBFSMazeSolver() {
-
-    }
 }
