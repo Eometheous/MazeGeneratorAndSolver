@@ -9,6 +9,7 @@ public class Maze {
     private final int height;
     private final AdjacencyListGraph mazeGraph;
     private final MazeWalls[][] mazeWalls;
+    private final int startingTile, endingTile;
 
     /**
      * Create a maze from a set AdjacencyListGraph and a set length and height
@@ -17,6 +18,8 @@ public class Maze {
      * @param height    the height of the maze
      */
     public Maze(AdjacencyListGraph maze, int length, int height) {
+        startingTile = 0;
+        endingTile = (length * height) - 1;
         this.length = length;
         this.height = height;
         this.mazeGraph = maze;
@@ -30,6 +33,8 @@ public class Maze {
      * @param height    the height of the maze
      */
     public Maze(int length, int height) {
+        startingTile = 0;
+        endingTile = (length * height) - 1;
         this.length = length;
         this.height = height;
         mazeGraph = new AdjacencyListGraph(this.length * this.height);
@@ -62,8 +67,8 @@ public class Maze {
             // if the nextX && nextY are in the maze, and it hasn't been visited yet
             // add edge to maze and create path with next x and y coordinates
             if (neighborExists(nextX, length) && neighborExists(nextY, height)
-                    && mazeGraph.getAdjList()[position(nextX, nextY)].numberOfItems() == 0) {
-                mazeGraph.addEdge(position(x, y),position(nextX,nextY));
+                    && mazeGraph.getAdjList()[node(nextX, nextY)].numberOfItems() == 0) {
+                mazeGraph.addEdge(node(x, y), node(nextX,nextY));
                 createPath(nextX, nextY);
             }
         }
@@ -91,11 +96,11 @@ public class Maze {
      */
     private void createWallsAt(int x, int y) {
         // convert coordinates into nodes in the graph
-        int current = position(x, y);
-        int top = position(x, y - 1);
-        int bottom = position(x, y + 1);
-        int left = position(x - 1, y);
-        int right = position(x + 1, y);
+        int current = node(x, y);
+        int top = node(x, y - 1);
+        int bottom = node(x, y + 1);
+        int left = node(x - 1, y);
+        int right = node(x + 1, y);
 
         // initialize the MazeWalls object
         mazeWalls[x][y] = new MazeWalls();
@@ -118,9 +123,25 @@ public class Maze {
      * @param y     the y coordinate
      * @return      the position
      */
-    private int position(int x, int y) {
+    public int node(int x, int y) {
         if (y == 0) return x;
-        return x + (y * this.length);
+        return x + (y * length);
+    }
+
+    /**
+     * Finds the coordinates of a node in the maze
+     * @param node  the node we are finding the coordinates for
+     * @return      the coordinates
+     */
+    public Coordinate position(int node) {
+        Coordinate coords = new Coordinate();
+
+        int nodeX = node % length;
+        int nodeY = (int) Math.floor(((double) node / (double) length) % height);
+
+        coords.setX(nodeX);
+        coords.setY(nodeY);
+        return coords;
     }
 
     /**
@@ -154,4 +175,11 @@ public class Maze {
             System.out.print(mazeWalls[x][height - 1].getBottom());
         }
     }
+
+    public int getLength() {return length;}
+    public int getHeight() {return height;}
+    public AdjacencyListGraph getMazeGraph() {return mazeGraph;}
+    public MazeWalls[][] getMazeWalls() {return mazeWalls;}
+    public int getStartingTile() {return startingTile;}
+    public int getEndingTile() {return endingTile;}
 }
