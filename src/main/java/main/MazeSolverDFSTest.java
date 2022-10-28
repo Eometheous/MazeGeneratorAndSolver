@@ -78,6 +78,8 @@ public class MazeSolverDFSTest {
     public void TestDFSMazeSolver() {
         // solve the maze and return the path
         LinkedList path = MazeSolver.solveMazeUsingDFS(testMaze);
+        // print out the solution path
+        System.out.println(path);
 
         // make sure path length is = expected path length
         assertEquals(expectedPath.numberOfItems(), path.numberOfItems());
