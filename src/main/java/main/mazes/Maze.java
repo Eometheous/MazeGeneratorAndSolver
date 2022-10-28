@@ -8,12 +8,12 @@ public class Maze {
     private final int length;
     private final int height;
     private final AdjacencyListGraph maze;
-    private final Cell[][] mazeCells;
+    private final MazeWalls[][] mazeWalls;
     public Maze(int length, int height) {
         this.length = length;
         this.height = height;
         maze = new AdjacencyListGraph(this.length * this.height);
-        mazeCells = new Cell[this.length][this.height];
+        mazeWalls = new MazeWalls[this.length][this.height];
         generate(0,0);
     }
 
@@ -56,15 +56,15 @@ public class Maze {
         System.out.println(maze);
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < length; x++) {
-                System.out.print(mazeCells[x][y].getTop());
+                System.out.print(mazeWalls[x][y].getTop());
             }
             for (int x = 0; x < length; x++) {
-                System.out.print(mazeCells[x][y].getMiddle());
+                System.out.print(mazeWalls[x][y].getMiddle());
             }
         }
         // print bottom row
         for (int x = 0; x < length; x++) {
-            System.out.print(mazeCells[x][height - 1].getBottom());
+            System.out.print(mazeWalls[x][height - 1].getBottom());
         }
     }
 
@@ -74,16 +74,16 @@ public class Maze {
         int bottom = position(x, y + 1);
         int left = position(x - 1, y);
         int right = position(x + 1, y);
-        mazeCells[x][y] = new Cell();
-        mazeCells[x][y].setNumber(current);
+        mazeWalls[x][y] = new MazeWalls();
+        mazeWalls[x][y].setNumber(current);
         if (neighborExists(y + Directions.up.dy, height))
-            mazeCells[x][y].setTopConnection(maze.searchEdge(current,top));
+            mazeWalls[x][y].setTopConnection(maze.searchEdge(current,top));
         if (neighborExists(y + Directions.down.dy, height))
-            mazeCells[x][y].setBottomConnection(maze.searchEdge(current,bottom));
+            mazeWalls[x][y].setBottomConnection(maze.searchEdge(current,bottom));
         if (neighborExists(x + Directions.left.dx, length))
-            mazeCells[x][y].setLeftConnection(maze.searchEdge(current,left));
+            mazeWalls[x][y].setLeftConnection(maze.searchEdge(current,left));
         if (neighborExists(x + Directions.right.dx, length))
-            mazeCells[x][y].setRightConnection(maze.searchEdge(current,right));
-        if (x == length - 1) mazeCells[x][y].setEnd(true);
+            mazeWalls[x][y].setRightConnection(maze.searchEdge(current,right));
+        if (x == length - 1) mazeWalls[x][y].setEnd(true);
     }
 }

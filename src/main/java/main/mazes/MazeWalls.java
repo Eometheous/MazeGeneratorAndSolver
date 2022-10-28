@@ -1,6 +1,6 @@
 package main.mazes;
 
-public class Cell {
+public class MazeWalls {
     private static final String H_WALL = "-----";
     private static final String EMPTY_H_WALL = "     ";
     private static final String V_WALL = "|";
@@ -11,7 +11,7 @@ public class Cell {
     private boolean isEnd;
     private int number;
 
-    public Cell() {
+    public MazeWalls() {
         number = -1;
         top = H_WALL;
         bottom = H_WALL;
