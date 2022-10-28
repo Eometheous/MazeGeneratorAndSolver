@@ -1,4 +1,4 @@
-package main.GraphTheoryAlgorithms;
+package main.graphTheoryAlgorithms;
 import java.util.*;
 
 public class BFS {

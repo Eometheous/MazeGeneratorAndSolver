@@ -1,6 +1,4 @@
-package main.GraphTheoryAlgorithms;
-
-import java.util.*;
+package main.graphTheoryAlgorithms;
 
 public class Tile {
     final int MAX_SIZE = 1000; // Max size is 1000x1000 size map
