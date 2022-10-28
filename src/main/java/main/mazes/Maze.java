@@ -7,7 +7,7 @@ import java.util.Random;
 public class Maze {
     private final int length;
     private final int height;
-    private final AdjacencyListGraph maze;
+    private final AdjacencyListGraph mazeGraph;
     private final MazeWalls[][] mazeWalls;
 
     /**
@@ -19,7 +19,7 @@ public class Maze {
     public Maze(AdjacencyListGraph maze, int length, int height) {
         this.length = length;
         this.height = height;
-        this.maze = maze;
+        this.mazeGraph = maze;
         mazeWalls = new MazeWalls[this.length][this.height];
         createMazeWalls();
     }
@@ -32,7 +32,7 @@ public class Maze {
     public Maze(int length, int height) {
         this.length = length;
         this.height = height;
-        maze = new AdjacencyListGraph(this.length * this.height);
+        mazeGraph = new AdjacencyListGraph(this.length * this.height);
         mazeWalls = new MazeWalls[this.length][this.height];
         createPath(0,0);
     }
@@ -62,8 +62,8 @@ public class Maze {
             // if the nextX && nextY are in the maze, and it hasn't been visited yet
             // add edge to maze and create path with next x and y coordinates
             if (neighborExists(nextX, length) && neighborExists(nextY, height)
-                    && maze.getAdjList()[position(nextX, nextY)].numberOfItems() == 0) {
-                maze.addEdge(position(x, y),position(nextX,nextY));
+                    && mazeGraph.getAdjList()[position(nextX, nextY)].numberOfItems() == 0) {
+                mazeGraph.addEdge(position(x, y),position(nextX,nextY));
                 createPath(nextX, nextY);
             }
         }
@@ -102,13 +102,13 @@ public class Maze {
         mazeWalls[x][y].setNumber(current); // doesn't actually do anything yet
         // if any edge is found in a given direction, add the connection
         if (neighborExists(y + Directions.up.dy, height))
-            mazeWalls[x][y].setTopConnection(maze.searchEdge(current,top));
+            mazeWalls[x][y].setTopConnection(mazeGraph.searchEdge(current,top));
         if (neighborExists(y + Directions.down.dy, height))
-            mazeWalls[x][y].setBottomConnection(maze.searchEdge(current,bottom));
+            mazeWalls[x][y].setBottomConnection(mazeGraph.searchEdge(current,bottom));
         if (neighborExists(x + Directions.left.dx, length))
-            mazeWalls[x][y].setLeftConnection(maze.searchEdge(current,left));
+            mazeWalls[x][y].setLeftConnection(mazeGraph.searchEdge(current,left));
         if (neighborExists(x + Directions.right.dx, length))
-            mazeWalls[x][y].setRightConnection(maze.searchEdge(current,right));
+            mazeWalls[x][y].setRightConnection(mazeGraph.searchEdge(current,right));
         if (x == length - 1) mazeWalls[x][y].setEnd(true);
     }
 
@@ -138,7 +138,7 @@ public class Maze {
      * the maze as well as the maze itself
      */
     public void display() {
-        System.out.println(maze);   // print adjacency list representation
+        System.out.println(mazeGraph);   // print adjacency list representation
 
         // print maze representation with walls
         for (int y = 0; y < height; y++) {
