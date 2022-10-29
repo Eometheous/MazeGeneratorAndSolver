@@ -23,9 +23,9 @@ public class MazeSolver {
         int node = maze.getStartingTile();
         Coordinate startingCoords = maze.position(node);
 
-        int tilesVisited = 0;
         // do DFS to find the maze solution
-        return DFS.depthFirstSearch(maze,visited,startingCoords, tilesVisited);
+        DFS.depthFirstSearch(maze,visited,startingCoords);
+        return maze.getSolution();
     }
 
     public static LinkedList solveMazeUsingBFS(Maze maze) {

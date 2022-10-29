@@ -11,48 +11,51 @@ public class DFS {
      * @param maze              the maze we are searching through
      * @param visited           the visited coordinates
      * @param currentPosition   current position in the maze
-     * @return                  the solution of the maze
      */
-    public static LinkedList depthFirstSearch(Maze maze, boolean[][] visited, Coordinate currentPosition, int tilesVisited) {
+    public static void depthFirstSearch(Maze maze, boolean[][] visited, Coordinate currentPosition) {
         int x = currentPosition.getX();
         int y = currentPosition.getY();
         int currentNode = maze.node(x,y);
 
         // grab next tile from maze at current node and store it
         Node nextTile = maze.getMazeGraph().getAdjList()[currentNode].getHead();
-        while (nextTile != null) {
-            if (tilesVisited > 9) tilesVisited = 0;
-
-            maze.getMazeWalls()[currentPosition.getX()][currentPosition.getY()].setChar(String.valueOf(tilesVisited));
-            tilesVisited++;
-
+        while (nextTile != null && maze.getSolution().getHead() == null) {
+            // if current tile hasn't been visited yet
+            if (!visited[x][y]) {
+                visited[x][y] = true;
+                maze.getMazeWalls()[currentPosition.getX()][currentPosition.getY()].setChar(String.valueOf(maze.getTilesVisited()));
+                maze.incrementTilesVisited();
+            }
             // grab next coordinates
             Coordinate nextTileCoords = maze.position(nextTile.getItem());
 
             // if next tile is the end of the maze
             if (nextTile.getItem() == maze.getEndingTile()) {
-                maze.getMazeWalls()[nextTileCoords.getX()][nextTileCoords.getY()].setChar(String.valueOf(tilesVisited));
-                return backTrack(maze, nextTileCoords);
+                maze.getMazeWalls()[nextTileCoords.getX()][nextTileCoords.getY()].setChar(String.valueOf(maze.getTilesVisited()));
+                backTrack(maze, nextTileCoords);
             }
 
-            // if current position hasn't been visited yet
-            if (!visited[x][y]) {
-                visited[x][y] = true;
-                return depthFirstSearch(maze, visited, nextTileCoords, tilesVisited);
+            // if next position hasn't been visited yet
+            if (!visited[nextTileCoords.getX()][nextTileCoords.getY()]) {
+                depthFirstSearch(maze, visited, nextTileCoords);
             }
             nextTile = nextTile.getNext();
         }
-        return null;
     }
 
     /**
      * Backtracks through the maze to return the solution of the maze
      * @param maze              maze we are backtracking through
      * @param currentPosition   current position in the maze
-     * @return                  the solution path of the maze
      */
-    private static LinkedList backTrack(Maze maze, Coordinate currentPosition) {
+    private static void backTrack(Maze maze, Coordinate currentPosition) {
         maze.display();
+        // clear all characters from the maze
+        for (int x = 0; x < maze.getLength(); x++) {
+            for (int y = 0; y < maze.getHeight(); y++)
+                maze.getMazeWalls()[x][y].setChar(" ");
+        }
+        // start backtracking and adding # to the path
         maze.getMazeWalls()[currentPosition.getX()][currentPosition.getY()].setChar("#");
         Node tile = maze.getMazeGraph().getAdjList()[maze.node(currentPosition.getX(), currentPosition.getY())].getHead();
         LinkedList path = new LinkedList();
@@ -69,6 +72,7 @@ public class DFS {
         currentPosition = maze.position(maze.getStartingTile());
         maze.getMazeWalls()[currentPosition.getX()][currentPosition.getY()].setChar("#");
         path.add(maze.getStartingTile());
-        return path;
+
+        maze.setSolution(path);
     }
 }
