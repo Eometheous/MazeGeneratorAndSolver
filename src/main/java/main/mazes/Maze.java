@@ -159,7 +159,6 @@ public class Maze {
      * the maze as well as the maze itself
      */
     public void display() {
-        System.out.println(mazeGraph);   // print adjacency list representation
 
         // print maze representation with walls
         for (int y = 0; y < height; y++) {
