@@ -13,7 +13,7 @@ public class DFS {
      * @param currentPosition   current position in the maze
      * @return                  the solution of the maze
      */
-    public static LinkedList DepthFirstSearch(Maze maze, boolean[][] visited, Coordinate currentPosition, int tilesVisited) {
+    public static LinkedList depthFirstSearch(Maze maze, boolean[][] visited, Coordinate currentPosition, int tilesVisited) {
         int x = currentPosition.getX();
         int y = currentPosition.getY();
         int currentNode = maze.node(x,y);
@@ -38,7 +38,7 @@ public class DFS {
             // if current position hasn't been visited yet
             if (!visited[x][y]) {
                 visited[x][y] = true;
-                return DepthFirstSearch(maze, visited, nextTileCoords, tilesVisited);
+                return depthFirstSearch(maze, visited, nextTileCoords, tilesVisited);
             }
             nextTile = nextTile.getNext();
         }

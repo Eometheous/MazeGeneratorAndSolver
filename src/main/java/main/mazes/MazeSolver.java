@@ -25,7 +25,7 @@ public class MazeSolver {
 
         int tilesVisited = 0;
         // do DFS to find the maze solution
-        return DFS.DepthFirstSearch(maze,visited,startingCoords, tilesVisited);
+        return DFS.depthFirstSearch(maze,visited,startingCoords, tilesVisited);
     }
 
     public static LinkedList solveMazeUsingBFS(Maze maze) {
