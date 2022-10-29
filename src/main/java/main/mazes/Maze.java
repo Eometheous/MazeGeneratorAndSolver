@@ -104,7 +104,7 @@ public class Maze {
 
         // initialize the MazeWalls object
         mazeWalls[x][y] = new MazeWalls();
-        mazeWalls[x][y].setNumber(current); // doesn't actually do anything yet
+
         // if any edge is found in a given direction, add the connection
         if (neighborExists(y + Directions.up.dy, height))
             mazeWalls[x][y].setTopConnection(mazeGraph.searchEdge(current,top));
