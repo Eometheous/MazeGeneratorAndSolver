@@ -9,10 +9,10 @@ public class MazeWalls {
 
     private String top, bottom, left, right;
     private boolean isEnd;
-    private int number;
+    private String c;
 
     public MazeWalls() {
-        number = -1;
+        c = " ";
         top = H_WALL;
         bottom = H_WALL;
         left = V_WALL;
@@ -25,8 +25,8 @@ public class MazeWalls {
     }
 
     public String getMiddle() {
-        if (isEnd) return left + "     " + right + "\n";
-        return left + "     ";
+        if (isEnd) return left + "  " + c + "  " + right + "\n";
+        return left + "  " + c + "  ";
     }
 
     public String getBottom() {
@@ -57,9 +57,6 @@ public class MazeWalls {
     public void setEnd(boolean e) {
         isEnd = e;
     }
-
-    public void setNumber(int n) {
-        number = n;
-    }
+    public void setChar(String c) {this.c = c;}
 
 }
