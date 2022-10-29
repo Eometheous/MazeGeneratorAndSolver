@@ -1,6 +1,7 @@
 package main.mazes;
 
 import main.graphs.AdjacencyListGraph;
+import main.linkedLists.LinkedList;
 
 import java.util.Random;
 
@@ -10,6 +11,9 @@ public class Maze {
     private final AdjacencyListGraph mazeGraph;
     private final MazeWalls[][] mazeWalls;
     private final int startingTile, endingTile;
+    private int tilesVisited;
+
+    private LinkedList solution;
 
     /**
      * Create a maze from a set AdjacencyListGraph and a set length and height
@@ -25,6 +29,8 @@ public class Maze {
         this.mazeGraph = maze;
         mazeWalls = new MazeWalls[this.length][this.height];
         createMazeWalls();
+        solution = new LinkedList();
+        tilesVisited = 0;
     }
 
     /**
@@ -40,6 +46,8 @@ public class Maze {
         mazeGraph = new AdjacencyListGraph(this.length * this.height);
         mazeWalls = new MazeWalls[this.length][this.height];
         createPath(0,0);
+        solution = new LinkedList();
+        tilesVisited = 0;
     }
 
     /**
@@ -181,4 +189,11 @@ public class Maze {
     public MazeWalls[][] getMazeWalls() {return mazeWalls;}
     public int getStartingTile() {return startingTile;}
     public int getEndingTile() {return endingTile;}
+    public LinkedList getSolution() {return solution;}
+    public int getTilesVisited() {return tilesVisited;}
+    public void incrementTilesVisited() {
+        tilesVisited++;
+        if (tilesVisited > 9) tilesVisited = 0;
+    }
+    public void setSolution(LinkedList solution) {this.solution = solution;}
 }
