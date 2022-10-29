@@ -23,8 +23,9 @@ public class MazeSolver {
         int node = maze.getStartingTile();
         Coordinate startingCoords = maze.position(node);
 
+        int tilesVisited = 0;
         // do DFS to find the maze solution
-        return DFS.DepthFirstSearch(maze,visited,startingCoords);
+        return DFS.DepthFirstSearch(maze,visited,startingCoords, tilesVisited);
     }
 
     public static LinkedList solveMazeUsingBFS(Maze maze) {
