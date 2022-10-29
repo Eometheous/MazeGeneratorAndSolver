@@ -72,6 +72,7 @@ public class MazeSolverDFSTest {
 
     @Test
     public void TestDisplay() {
+        System.out.println(testMaze.getMazeGraph());
         testMaze.display();
     }
     @Test
@@ -80,7 +81,7 @@ public class MazeSolverDFSTest {
         LinkedList path = MazeSolver.solveMazeUsingDFS(testMaze);
         // print out the solution path
         System.out.println(path);
-
+        testMaze.display();
         // make sure path length is = expected path length
         assertEquals(expectedPath.numberOfItems(), path.numberOfItems());
 
