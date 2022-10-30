@@ -191,9 +191,6 @@ public class Maze {
     public int getEndingTile() {return endingTile;}
     public LinkedList getSolution() {return solution;}
     public int getTilesVisited() {return tilesVisited;}
-    public void incrementTilesVisited() {
-        tilesVisited++;
-        if (tilesVisited > 9) tilesVisited = 0;
-    }
+    public void incrementTilesVisited() {tilesVisited++;}
     public void setSolution(LinkedList solution) {this.solution = solution;}
 }
