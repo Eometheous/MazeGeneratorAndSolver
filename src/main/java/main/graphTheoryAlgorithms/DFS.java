@@ -23,7 +23,7 @@ public class DFS {
             // if current tile hasn't been visited yet
             if (!visited[x][y]) {
                 visited[x][y] = true;
-                maze.getMazeWalls()[currentPosition.getX()][currentPosition.getY()].setChar(String.valueOf(maze.getTilesVisited()));
+                maze.getMazeWalls()[currentPosition.getX()][currentPosition.getY()].setChar(String.valueOf(maze.getTilesVisited() % 10));
                 maze.incrementTilesVisited();
             }
             // grab next coordinates
@@ -31,7 +31,7 @@ public class DFS {
 
             // if next tile is the end of the maze
             if (nextTile.getItem() == maze.getEndingTile()) {
-                maze.getMazeWalls()[nextTileCoords.getX()][nextTileCoords.getY()].setChar(String.valueOf(maze.getTilesVisited()));
+                maze.getMazeWalls()[nextTileCoords.getX()][nextTileCoords.getY()].setChar(String.valueOf(maze.getTilesVisited() % 10));
                 backTrack(maze, nextTileCoords);
             }
 
