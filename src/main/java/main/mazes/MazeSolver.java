@@ -12,17 +12,6 @@ public class MazeSolver {
      * @param maze  the maze we are solving
      * @return      the solution path
      */
-     public static Queue<Coordinate> initQueue(Maze maze){
-        int length = maze.getLength();
-        int height = maze.getHeight();
-        Queue<Coordinate> queue = new java.util.LinkedList<>();
-        // initialize the 2d array
-        for (int x = 0; x < length; x++)
-            for (int y = 0; y < height; y++)
-                // visited[x][y] = false;
-                queue.add(new Coordinate());
-        return queue;
-    }
 
     public static LinkedList solveMazeUsingDFS(Maze maze) {
         int length = maze.getLength();
@@ -44,16 +33,27 @@ public class MazeSolver {
     }
 
     public static LinkedList solveMazeUsingBFS(Maze maze) {
-        //TODO make BFS algorithm that solves a maze
+
 
         Queue<Coordinate> tiles = initQueue(maze);
 
         int startingPos = maze.getStartingTile();
-        Coordinate startTile = maze.position(startingPos);
+        Coordinate startTile = maze.positionOf(startingPos);
 
         BFS.bfsAlgo(maze, tiles, startTile);
 
 
         return maze.getSolution();
+    }
+    private static Queue<Coordinate> initQueue(Maze maze){
+        int length = maze.getLength();
+        int height = maze.getHeight();
+        Queue<Coordinate> queue = new java.util.LinkedList<>();
+        // initialize the 2d array
+        for (int x = 0; x < length; x++)
+            for (int y = 0; y < height; y++)
+                // visited[x][y] = false;
+                queue.add(new Coordinate());
+        return queue;
     }
 }
