@@ -141,7 +141,7 @@ public class Maze {
      * @param node  the node we are finding the coordinates for
      * @return      the coordinates
      */
-    public Coordinate position(int node) {
+    public Coordinate positionOf(int node) {
         Coordinate coords = new Coordinate();
 
         int nodeX = node % length;
@@ -193,4 +193,5 @@ public class Maze {
     public int getTilesVisited() {return tilesVisited;}
     public void incrementTilesVisited() {tilesVisited++;}
     public void setSolution(LinkedList solution) {this.solution = solution;}
+    public boolean foundSolution() {return solution.numberOfItems() != 0;}
 }
