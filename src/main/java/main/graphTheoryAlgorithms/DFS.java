@@ -19,24 +19,26 @@ public class DFS {
 
         // grab next tile from maze at current node and store it
         Node nextTile = maze.getMazeGraph().getAdjList()[currentNode].getHead();
-        while (nextTile != null && maze.getSolution().getHead() == null) {
+        while (nextTile != null && !maze.foundSolution()) {
             // if current tile hasn't been visited yet
             if (!visited[x][y]) {
                 visited[x][y] = true;
-                maze.getMazeWalls()[currentPosition.getX()][currentPosition.getY()].setChar(String.valueOf(maze.getTilesVisited() % 10));
+                maze.getMazeWalls()[x][y].setChar(String.valueOf(maze.getTilesVisited() % 10));
                 maze.incrementTilesVisited();
             }
             // grab next coordinates
-            Coordinate nextTileCoords = maze.position(nextTile.getItem());
+            Coordinate nextTileCoords = maze.positionOf(nextTile.getItem());
+            x = nextTileCoords.getX();
+            y = nextTileCoords.getY();
 
             // if next tile is the end of the maze
             if (nextTile.getItem() == maze.getEndingTile()) {
-                maze.getMazeWalls()[nextTileCoords.getX()][nextTileCoords.getY()].setChar(String.valueOf(maze.getTilesVisited() % 10));
+                maze.getMazeWalls()[x][y].setChar(String.valueOf(maze.getTilesVisited() % 10));
                 backTrack(maze, nextTileCoords);
             }
 
             // if next position hasn't been visited yet
-            if (!visited[nextTileCoords.getX()][nextTileCoords.getY()]) {
+            if (!visited[x][y]) {
                 depthFirstSearch(maze, visited, nextTileCoords);
             }
             nextTile = nextTile.getNext();
@@ -63,13 +65,13 @@ public class DFS {
         while (tile.getItem() != maze.getStartingTile()) {
             if (tile.getNext() == null){
                 path.add(tile.getItem());
-                currentPosition = maze.position(tile.getItem());
+                currentPosition = maze.positionOf(tile.getItem());
                 maze.getMazeWalls()[currentPosition.getX()][currentPosition.getY()].setChar("#");
                 tile = maze.getMazeGraph().getAdjList()[tile.getItem()].getHead();
             }
             tile = tile.getNext();
         }
-        currentPosition = maze.position(maze.getStartingTile());
+        currentPosition = maze.positionOf(maze.getStartingTile());
         maze.getMazeWalls()[currentPosition.getX()][currentPosition.getY()].setChar("#");
         path.add(maze.getStartingTile());
 
