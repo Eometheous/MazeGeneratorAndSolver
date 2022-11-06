@@ -87,7 +87,7 @@ public class BFS {
         while(tile.getItem() != maze.getEndingTile()){
             if(tile.getNext() == null){
                 path.add(tile.getItem());
-                current = maze.position(tile.getItem());
+                current = maze.positionOf(tile.getItem());
                 actualMaze[x][y].setChar("#");
                 tile = maze.getMazeGraph().getAdjList()[tile.getItem()].getHead();
             }
@@ -95,7 +95,7 @@ public class BFS {
             tile = tile.getNext();
         }
 
-        current = maze.position(maze.getStartingTile());
+        current = maze.positionOf(maze.getStartingTile());
         actualMaze[current.getX()][current.getY()].setChar("#");
         path.add(maze.getStartingTile());
 
