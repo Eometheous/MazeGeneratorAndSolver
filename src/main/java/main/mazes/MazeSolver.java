@@ -21,7 +21,7 @@ public class MazeSolver {
 
         // convert starting node to starting coordinates
         int node = maze.getStartingTile();
-        Coordinate startingCoords = maze.position(node);
+        Coordinate startingCoords = maze.positionOf(node);
 
         // do DFS to find the maze solution
         DFS.depthFirstSearch(maze,visited,startingCoords);
