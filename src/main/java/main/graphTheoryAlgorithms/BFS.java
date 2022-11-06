@@ -1,11 +1,18 @@
 package main.graphTheoryAlgorithms;
 import java.util.*;
 
+import main.linkedLists.LinkedList;
+import main.linkedLists.Node;
+import main.mazes.Coordinate;
+import main.mazes.Maze;
+import main.mazes.MazeWalls;
+
 public class BFS {
     ArrayList<String> maze;
 
     PriorityQueue<Tile> to_process;
-    HashSet<Tile> processed;
+    // HashSet<Tile> processed;
+    HashMap<Boolean, Coordinate> hashtable;
 
     int width=0, height=0;
 
@@ -13,7 +20,15 @@ public class BFS {
         this.maze = maze;
         this.width = width;
         this.height = height;
-        processed = new HashSet<Tile>(width * height);
+    }
+
+    private static void initMaze(Maze maze){
+        MazeWalls[][] actualMaze = maze.getMazeWalls();
+
+        for (int x = 0; x < maze.getLength(); x++) {
+            for (int y = 0; y < maze.getHeight(); y++)
+                actualMaze[x][y].setChar(" ");
+        }
     }
 
     // Handling bad inputs.
@@ -22,50 +37,69 @@ public class BFS {
         System.exit(0);
     }
 
-    public void bfsAlgo(Tile start, Tile end){
-        // Bounds checking so we dont go outside the maze.
-        // Validating starting rows and cols, before doing BFS
-        if(start.y < 0 || start.x >= width) die("Invalid starting row");
-        if(start.x < 0 || start.y >= height) die("Invalid starting col.\n");
-        if(end.x < 0 || end.x >= width) die("Invalid ending row\n");
-        if(end.y < 0 || end.y >= height) die("Invalid ending col.\n");
+    public static void bfsAlgo(Maze maze, Queue<Coordinate> tiles, Coordinate start){
+        MazeWalls[][] actualMaze = maze.getMazeWalls();
+        int x = start.getX();
+        int y = start.getY();
 
-        to_process.add(start);
+        int node = maze.node(x, y);
 
-        while(to_process.size() != 0){
-            Tile current = to_process.remove(); // Does both top() and pop()
+        Node nextTile = maze.getMazeGraph().getAdjList()[node].getHead();
+        // Iterate until queue is empty. 
+        while(nextTile != null && !tiles.isEmpty()){
+            Coordinate current = tiles.poll(); // poll() grabs and removes item, which helps iterate through entire.
 
-            if(processed.contains(current)) continue;
+            if(!current.getVisited()){
+                current.setVisited(true);
+                actualMaze[x][y].setChar(String.valueOf(maze.getTilesVisited()));
+                maze.incrementTilesVisited();
 
-            to_process.add(current);
-
-            // Handles all 8 direction of each tile (N/W/S/E/NW/SW/NE/SE)
-            for(int i = -1; i <= 1; i++){
-                for(int j = -1; j <= 1; j++){
-                    int newX = current.x + i;
-                    int newY = current.y + j;
-
-                    if(newX < 0 || newX >= width || newY < 0 || newY >= height) continue;
-                }
+                bfsAlgo(maze, tiles, start);
             }
-            if(backtrack(current, end)) return;
+
+            // Backtracking.
+            if(nextTile.getItem() == maze.getEndingTile()){
+                actualMaze[current.getX()][current.getY()].setChar(String.valueOf(maze.getTilesVisited()));
+                backtrack(maze, current);
+            }
+
+            nextTile = nextTile.getNext();
         }
     }
 
-    public boolean backtrack(Tile current, Tile end){
-        if(current.x == end.x && current.y == end.y){
-            while(true){
-                maze.set(current.y, maze.get(current.y).replace(maze.get(current.y).charAt(current.x), '#')); // does maze[current.y][current.x] = '#';
-                
-                if(current.from_x == -1 || current.from_y == -1) break;
+    public static void backtrack(Maze maze, Coordinate current){
+        maze.display();
+        int x = current.getX();
+        int y = current.getY();
+        MazeWalls[][] actualMaze = maze.getMazeWalls();
 
-                Tile prev = new Tile(current.from_x, current.from_y, 0, 0, 0);
+        initMaze(maze);
 
-                if(processed.contains(prev)) current = prev;
+        actualMaze[x][y].setChar("#");
+
+        int node = maze.node(x, y);
+
+        Node tile = maze.getMazeGraph().getAdjList()[node].getHead();
+
+        LinkedList path = new LinkedList();
+        path.add(maze.getEndingTile());
+
+        while(tile.getItem() != maze.getEndingTile()){
+            if(tile.getNext() == null){
+                path.add(tile.getItem());
+                current = maze.position(tile.getItem());
+                actualMaze[x][y].setChar("#");
+                tile = maze.getMazeGraph().getAdjList()[tile.getItem()].getHead();
             }
-            return true;
+
+            tile = tile.getNext();
         }
-        return false;
+
+        current = maze.position(maze.getStartingTile());
+        actualMaze[current.getX()][current.getY()].setChar("#");
+        path.add(maze.getStartingTile());
+
+        maze.setSolution(path);
     }
 
     public void printInfo(){
