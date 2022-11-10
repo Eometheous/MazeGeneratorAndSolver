@@ -77,7 +77,7 @@ public class Maze {
             if (neighborExists(nextX, length) && neighborExists(nextY, height)
                     && mazeGraph.getAdjList()[node(nextX, nextY)].numberOfItems() == 0) {
                 mazeGraph.addEdge(node(x, y), node(nextX,nextY));
-                createPath(nextX, nextY);
+                if (node(nextX,nextY) != endingTile) createPath(nextX, nextY);
             }
         }
 
