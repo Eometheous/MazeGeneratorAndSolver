@@ -3,6 +3,10 @@ package main.mazes;
 import main.graphs.AdjacencyListGraph;
 import main.linkedLists.LinkedList;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Random;
 
 public class Maze {
@@ -45,6 +49,18 @@ public class Maze {
         this.height = height;
         mazeGraph = new AdjacencyListGraph(this.length * this.height);
         mazeWalls = new MazeWalls[this.length][this.height];
+        final String filePath = "src/main/java/main/mazes/testMazes.txt";
+        try {
+            File file = new File(filePath);
+            FileWriter fileWriter = new FileWriter(file, true);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            bufferedWriter.write(length + " " + height + " " + ((length * height) - 1) + " ");
+            bufferedWriter.close();
+        }
+        catch (IOException ioe) {
+            System.out.println("Esception occured: ");
+            ioe.printStackTrace();
+        }
         createPath(0,0);
         solution = new LinkedList();
         tilesVisited = 0;
@@ -56,31 +72,45 @@ public class Maze {
      * @param y         the starting y coordinate
      */
     public void createPath(int x, int y) {
-        // store directions into an array
-        Directions[] directions = Directions.values();
-        Random randomDirectionGenerator = new Random();
+        final String filePath = "src/main/java/main/mazes/testMazes.txt";
+        try {
+            File file = new File(filePath);
+            FileWriter fileWriter = new FileWriter(file,true);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
-        // make the order of directions random
-        for (int i = 0; i < directions.length; i++) {
-            int randomDirection = randomDirectionGenerator.nextInt(4);
-            Directions temp = directions[i];
-            directions[i] = directions[randomDirection];
-            directions[randomDirection] = temp;
-        }
-        // for every direction in directions, create the path for the maze
-        for (Directions direction: directions) {
-            int nextX = x + direction.dx;   // get next x coordinate
-            int nextY = y + direction.dy;   // get next y coordinate
 
-            // if the nextX && nextY are in the maze, and it hasn't been visited yet
-            // add edge to maze and create path with next x and y coordinates
-            if (neighborExists(nextX, length) && neighborExists(nextY, height)
-                    && mazeGraph.getAdjList()[node(nextX, nextY)].numberOfItems() == 0) {
-                mazeGraph.addEdge(node(x, y), node(nextX,nextY));
-                if (node(nextX,nextY) != endingTile) createPath(nextX, nextY);
+
+            // store directions into an array
+            Directions[] directions = Directions.values();
+            Random randomDirectionGenerator = new Random();
+
+            // make the order of directions random
+            for (int i = 0; i < directions.length; i++) {
+                int randomDirection = randomDirectionGenerator.nextInt(4);
+                Directions temp = directions[i];
+                directions[i] = directions[randomDirection];
+                directions[randomDirection] = temp;
             }
-        }
+            // for every direction in directions, create the path for the maze
+            for (Directions direction : directions) {
+                int nextX = x + direction.dx;   // get next x coordinate
+                int nextY = y + direction.dy;   // get next y coordinate
 
+                // if the nextX && nextY are in the maze, and it hasn't been visited yet
+                // add edge to maze and create path with next x and y coordinates
+                if (neighborExists(nextX, length) && neighborExists(nextY, height)
+                        && mazeGraph.getAdjList()[nodeAt(nextX, nextY)].numberOfItems() == 0) {
+                    mazeGraph.addEdge(nodeAt(x, y), nodeAt(nextX, nextY));
+                    bufferedWriter.write(nodeAt(x, y) + " " + nodeAt(nextX,nextY) + " ");
+                    if (nodeAt(nextX, nextY) != endingTile) createPath(nextX, nextY);
+                }
+            }
+            bufferedWriter.close();
+        }
+        catch (IOException ioe) {
+            System.out.println("Esception occured: ");
+            ioe.printStackTrace();
+        }
         createMazeWalls();
     }
 
@@ -104,11 +134,11 @@ public class Maze {
      */
     private void createWallsAt(int x, int y) {
         // convert coordinates into nodes in the graph
-        int current = node(x, y);
-        int top = node(x, y - 1);
-        int bottom = node(x, y + 1);
-        int left = node(x - 1, y);
-        int right = node(x + 1, y);
+        int current = nodeAt(x, y);
+        int top = nodeAt(x, y - 1);
+        int bottom = nodeAt(x, y + 1);
+        int left = nodeAt(x - 1, y);
+        int right = nodeAt(x + 1, y);
 
         // initialize the MazeWalls object
         mazeWalls[x][y] = new MazeWalls();
@@ -131,7 +161,7 @@ public class Maze {
      * @param y     the y coordinate
      * @return      the position
      */
-    public int node(int x, int y) {
+    public int nodeAt(int x, int y) {
         if (y == 0) return x;
         return x + (y * length);
     }

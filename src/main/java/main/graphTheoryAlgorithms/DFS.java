@@ -15,7 +15,7 @@ public class DFS {
     public static void depthFirstSearch(Maze maze, boolean[][] visited, Coordinate currentPosition) {
         int x = currentPosition.getX();
         int y = currentPosition.getY();
-        int currentNode = maze.node(x,y);
+        int currentNode = maze.nodeAt(x,y);
 
         // grab next tile from maze at current node and store it
         Node nextTile = maze.getMazeGraph().getAdjList()[currentNode].getHead();
@@ -59,7 +59,7 @@ public class DFS {
         }
         // start backtracking and adding # to the path
         maze.getMazeWalls()[currentPosition.getX()][currentPosition.getY()].setChar("#");
-        Node tile = maze.getMazeGraph().getAdjList()[maze.node(currentPosition.getX(), currentPosition.getY())].getHead();
+        Node tile = maze.getMazeGraph().getAdjList()[maze.nodeAt(currentPosition.getX(), currentPosition.getY())].getHead();
         LinkedList path = new LinkedList();
         path.add(maze.getEndingTile());
         while (tile.getItem() != maze.getStartingTile()) {
