@@ -1,7 +1,5 @@
 package main.mazes;
 
-import java.util.Queue;
-
 import main.graphTheoryAlgorithms.DFS;
 import main.graphTheoryAlgorithms.BFS;
 import main.linkedLists.LinkedList;
@@ -12,8 +10,37 @@ public class MazeSolver {
      * @param maze  the maze we are solving
      * @return      the solution path
      */
-
     public static LinkedList solveMazeUsingDFS(Maze maze) {
+        boolean[][] visited = initializeFalse(maze);
+
+        Coordinate startingCoords = getStartingCoordinate(maze);
+
+        // do DFS to find the maze solution
+        DFS.depthFirstSearch(maze,visited,startingCoords);
+        return maze.getSolution();
+    }
+    /**
+     * Solves a maze using a BFS algorithm
+     * @param maze  the maze we are solving
+     * @return      the solution path
+     */
+    public static LinkedList solveMazeUsingBFS(Maze maze) {
+        boolean[][] visited = initializeFalse(maze);
+
+        // convert starting node to starting coordinates
+        Coordinate startingCoords = getStartingCoordinate(maze);
+
+        BFS.breadthFirstSearch(maze,visited,startingCoords);
+
+        return maze.getSolution();
+    }
+
+    /**
+     * Initializes a 2d array by setting every index to false
+     * @param maze  the maze the 2d array is for
+     * @return      initialized array
+     */
+    private static boolean[][] initializeFalse(Maze maze) {
         int length = maze.getLength();
         int height = maze.getHeight();
         boolean[][] visited = new boolean[length][height];
@@ -22,38 +49,17 @@ public class MazeSolver {
         for (int x = 0; x < length; x++)
             for (int y = 0; y < height; y++)
                 visited[x][y] = false;
+        return visited;
+    }
 
+    /**
+     * Gets the starting position for the maze
+     * @param maze  the maze we need the starting position of
+     * @return      the starting position
+     */
+    private static Coordinate getStartingCoordinate(Maze maze) {
         // convert starting node to starting coordinates
         int node = maze.getStartingTile();
-        Coordinate startingCoords = maze.positionOf(node);
-
-        // do DFS to find the maze solution
-        DFS.depthFirstSearch(maze,visited,startingCoords);
-        return maze.getSolution();
-    }
-
-    public static LinkedList solveMazeUsingBFS(Maze maze) {
-
-
-        Queue<Coordinate> tiles = initQueue(maze);
-
-        int startingPos = maze.getStartingTile();
-        Coordinate startTile = maze.positionOf(startingPos);
-
-        BFS.bfsAlgo(maze, tiles, startTile);
-
-
-        return maze.getSolution();
-    }
-    private static Queue<Coordinate> initQueue(Maze maze){
-        int length = maze.getLength();
-        int height = maze.getHeight();
-        Queue<Coordinate> queue = new java.util.LinkedList<>();
-        // initialize the 2d array
-        for (int x = 0; x < length; x++)
-            for (int y = 0; y < height; y++)
-                // visited[x][y] = false;
-                queue.add(new Coordinate());
-        return queue;
+        return maze.positionOf(node);
     }
 }
