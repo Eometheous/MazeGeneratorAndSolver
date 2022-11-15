@@ -57,7 +57,8 @@ public class MazeSolverTest {
             LinkedList path = MazeSolver.solveMazeUsingDFS(testMazes[i]);
             // print out the solution path
             testMazes[i].display();
-            System.out.println(path + "\n");
+            System.out.println(path);
+            System.out.println(testMazes[i].getTilesVisited() + "\n");
             // make sure path length is = expected path length
             assertEquals(DFStilesVisited[i], testMazes[i].getTilesVisited());
             assertEquals(testSolutionPaths[i].numberOfItems(), path.numberOfItems());
@@ -80,7 +81,8 @@ public class MazeSolverTest {
             LinkedList path = MazeSolver.solveMazeUsingBFS(testMazes[i]);
             // print out the solution path
             testMazes[i].display();
-            System.out.println(path + "\n");
+            System.out.println(path);
+            System.out.println(testMazes[i].getTilesVisited() + "\n");
             // make sure path length is = expected path length
             assertEquals(BFStilesVisited[i], testMazes[i].getTilesVisited());
             assertEquals(testSolutionPaths[i].numberOfItems(), path.numberOfItems());
