@@ -11,6 +11,8 @@ public class MazeSolver {
      * @return      the solution path
      */
     public static LinkedList solveMazeUsingDFS(Maze maze) {
+        maze.resetTilesVisited();
+        maze.resetSolution();
         boolean[][] visited = initializeFalse(maze);
 
         Coordinate startingCoords = getStartingCoordinate(maze);
@@ -25,6 +27,8 @@ public class MazeSolver {
      * @return      the solution path
      */
     public static LinkedList solveMazeUsingBFS(Maze maze) {
+        maze.resetTilesVisited();
+        maze.resetSolution();
         boolean[][] visited = initializeFalse(maze);
 
         // convert starting node to starting coordinates

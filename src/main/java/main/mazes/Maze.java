@@ -190,6 +190,8 @@ public class Maze {
     public int getEndingTile() {return endingTile;}
     public LinkedList getSolution() {return solution;}
     public int getTilesVisited() {return tilesVisited;}
+    public void resetTilesVisited() {tilesVisited = 0;}
+    public void resetSolution() {solution = new LinkedList();}
     public void incrementTilesVisited() {tilesVisited++;}
     public void setSolution(LinkedList solution) {this.solution = solution;}
     public boolean foundSolution() {return solution.numberOfItems() > 0;}
