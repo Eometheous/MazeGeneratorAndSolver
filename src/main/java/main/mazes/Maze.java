@@ -2,10 +2,15 @@ package main.mazes;
 
 import main.graphs.AdjacencyListGraph;
 import main.linkedLists.LinkedList;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Random;
 public class Maze {
     private final int length;
     private final int height;
+    private final String filename;
     private final AdjacencyListGraph mazeGraph;
     private final MazeWalls[][] mazeWalls;
     private final int startingTile, endingTile;
@@ -29,6 +34,8 @@ public class Maze {
         createMazeWalls();
         solution = new LinkedList();
         tilesVisited = 0;
+        filename = length + "x" + height + "maze" + System.currentTimeMillis();
+        saveMazeToFile(false);
     }
 
     /**
@@ -48,6 +55,8 @@ public class Maze {
 
         solution = new LinkedList();
         tilesVisited = 0;
+        filename = length + "x" + height + "maze" + System.currentTimeMillis();
+        saveMazeToFile(false);
     }
 
     /**
@@ -166,19 +175,49 @@ public class Maze {
      * the maze as well as the maze itself
      */
     public void display() {
+        System.out.print(getMazeString());
+    }
 
+    private String getMazeString() {
+        StringBuilder mazeString = new StringBuilder();
         // print maze representation with walls
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < length; x++) {
-                System.out.print(mazeWalls[x][y].getTop());
+                mazeString.append(mazeWalls[x][y].getTop());
             }
             for (int x = 0; x < length; x++) {
-                System.out.print(mazeWalls[x][y].getMiddle());
+                mazeString.append(mazeWalls[x][y].getMiddle());
             }
         }
         // print bottom walls
         for (int x = 0; x < length; x++) {
-            System.out.print(mazeWalls[x][height - 1].getBottom());
+            mazeString.append(mazeWalls[x][height - 1].getBottom());
+        }
+        return mazeString.toString();
+    }
+
+    public void saveMazeToFile(Boolean append) {
+        String filepath = "src/main/saved_mazes/" + filename;
+        try {
+            FileWriter fileWriter = new FileWriter(filepath, append);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            bufferedWriter.write(getMazeString());
+            bufferedWriter.newLine();
+            bufferedWriter.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public void fileWrite(String string) {
+        String filepath = "src/main/saved_mazes/" + filename;
+        try {
+            FileWriter fileWriter = new FileWriter(filepath, true);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            bufferedWriter.write(string);
+            bufferedWriter.newLine();
+            bufferedWriter.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
