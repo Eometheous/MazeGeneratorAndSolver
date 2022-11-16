@@ -51,7 +51,7 @@ public class DFS {
      * @param currentPosition   current position in the maze
      */
     private static void backTrack(Maze maze, Coordinate currentPosition) {
-        maze.display();
+        maze.saveMazeToFile(true);
         // clear all characters from the maze
         for (int x = 0; x < maze.getLength(); x++) {
             for (int y = 0; y < maze.getHeight(); y++)
