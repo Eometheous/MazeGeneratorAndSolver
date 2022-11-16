@@ -18,7 +18,11 @@ public class MazeSolver {
         Coordinate startingCoords = getStartingCoordinate(maze);
 
         // do DFS to find the maze solution
+        maze.fileWrite("Solving Using DFS");
         DFS.depthFirstSearch(maze,visited,startingCoords);
+        maze.saveMazeToFile(true);
+        maze.fileWrite(String.format("Solution Path: %s", maze.getSolution()));
+        maze.fileWrite(String.format("Tiles Visited: %d\n",maze.getTilesVisited()));
         return maze.getSolution();
     }
     /**
@@ -34,8 +38,11 @@ public class MazeSolver {
         // convert starting node to starting coordinates
         Coordinate startingCoords = getStartingCoordinate(maze);
 
+        maze.fileWrite("Solving Using BFS");
         BFS.breadthFirstSearch(maze,visited,startingCoords);
-
+        maze.saveMazeToFile(true);
+        maze.fileWrite(String.format("Solution Path: %s", maze.getSolution()));
+        maze.fileWrite(String.format("Tiles Visited: %d\n",maze.getTilesVisited()));
         return maze.getSolution();
     }
 
