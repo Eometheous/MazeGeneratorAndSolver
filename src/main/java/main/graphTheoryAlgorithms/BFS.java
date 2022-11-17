@@ -42,14 +42,12 @@ public class BFS {
         
         addVisited(maze.nodeAt(x,y));
         visited[x][y] = true;
-        maze.incrementTilesVisited();
 
-        
-
-        while(!tileLocations.isEmpty() && maze.getSolution().getHead() == null){
+        while(!tileLocations.isEmpty() && maze.foundSolution()){
             int currentTileLocation = tileLocations.poll();
             currentCoords = maze.positionOf(currentTileLocation);
             Node neighbors = getAdjList(maze, currentTileLocation).getHead();
+            
             updateLocation(currentCoords); // This updates the coordinates {X,Y} location in 2-Dimensional array of MazeWall.
 
             // Backtracks after we find the ending location
@@ -78,7 +76,7 @@ public class BFS {
     }
 
     public static void backtrack(Maze maze, Coordinate current){
-        maze.display();
+        maze.saveMazeToFile(true);
         MazeWalls[][] actualMaze = maze.getMazeWalls();
         LinkedList path = new LinkedList();
 
@@ -98,6 +96,9 @@ public class BFS {
                 tileLocation = tile.getItem();
                 path.add(tileLocation);
                 current = maze.positionOf(tileLocation);
+                
+                updateLocation(current);
+                
                 actualMaze[x][y].setChar("#");
                 tile = maze.getMazeGraph().getAdjList()[tileLocation].getHead();
             }
