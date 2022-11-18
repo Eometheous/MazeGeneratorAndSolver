@@ -15,8 +15,7 @@ public class Maze {
     private final MazeWalls[][] mazeWalls;
     private final int startingTile, endingTile;
     private int tilesVisited;
-
-    private LinkedList solution;
+    private LinkedList mazeSolution;
 
     /**
      * Create a maze from a set AdjacencyListGraph and a set length and height
@@ -32,7 +31,7 @@ public class Maze {
         this.mazeGraph = maze;
         mazeWalls = new MazeWalls[this.length][this.height];
         createMazeWalls();
-        solution = new LinkedList();
+        mazeSolution = new LinkedList();
         tilesVisited = 0;
         filename = length + "x" + height + "maze" + this.hashCode() + ".txt";
         saveMazeToFile(false);
@@ -52,8 +51,9 @@ public class Maze {
         mazeWalls = new MazeWalls[this.length][this.height];
 
         createPath(0,0);
+        createMazeWalls();
 
-        solution = new LinkedList();
+        mazeSolution = new LinkedList();
         tilesVisited = 0;
         filename = length + "x" + height + "maze" + this.hashCode() + ".txt";
         saveMazeToFile(false);
@@ -81,7 +81,7 @@ public class Maze {
             int nextX = x + direction.dx;   // get next x coordinate
             int nextY = y + direction.dy;   // get next y coordinate
 
-            // if the nextX && nextY are in the maze, and it hasn't been visited yet
+            // if the nextX && nextY are in the maze, and it hasn't been connected yet
             // add edge to maze and create path with next x and y coordinates
             if (neighborExists(nextX, length) && neighborExists(nextY, height)
                     && mazeGraph.getAdjList()[nodeAt(nextX, nextY)].numberOfItems() == 0) {
@@ -89,11 +89,10 @@ public class Maze {
                 if (nodeAt(nextX, nextY) != endingTile) createPath(nextX, nextY);
             }
         }
-        createMazeWalls();
     }
 
     /**
-     * Creates the maze walls to represent the AdjacencyListGraph as an actual maze
+     * Creates the maze walls to represent the AdjacencyListGraph as an ascii maze
      */
     private void createMazeWalls() {
         int x;
@@ -134,7 +133,7 @@ public class Maze {
     }
 
     /**
-     * Converts x and y coordinates to a position in the AdjacencyList Graph
+     * Converts x and y coordinates to a node in the AdjacencyList Graph
      * @param x     the x coordinate
      * @param y     the y coordinate
      * @return      the position
@@ -152,32 +151,35 @@ public class Maze {
     public Coordinate positionOf(int node) {
         Coordinate coords = new Coordinate();
 
-        int nodeX = node % length;
-        int nodeY = (int) Math.floor(((double) node / (double) length) % height);
+        int x = node % length;
+        int y = (int) Math.floor(((double) node / (double) length) % height);
 
-        coords.setX(nodeX);
-        coords.setY(nodeY);
+        coords.setX(x);
+        coords.setY(y);
         return coords;
     }
 
     /**
-     * Checks if a cell is actually in the maze
-     * @param cell  the cell we are checking
+     * Checks if a node is actually in the maze
+     * @param node  the node we are checking
      * @param bound the boundary of the maze
      * @return      true if it is in the maze, false if it isn't
      */
-    public boolean neighborExists(int cell, int bound) {
-        return (cell >= 0) && (cell < bound);
+    public boolean neighborExists(int node, int bound) {
+        return (node >= 0) && (node < bound);
     }
 
     /**
-     * Displays the Adjacency List Representation of
-     * the maze as well as the maze itself
+     * Displays the maze
      */
     public void display() {
         System.out.print(getMazeString());
     }
 
+    /**
+     * creates an ascii maze as a string
+     * @return  returns the string of the ascii maze
+     */
     private String getMazeString() {
         StringBuilder mazeString = new StringBuilder();
         // print maze representation with walls
@@ -196,6 +198,11 @@ public class Maze {
         return mazeString.toString();
     }
 
+    /**
+     * Saves the ascii maze to a file
+     * The file location is src/main/saved_mazes/
+     * @param append    true will append, false will overwrite
+     */
     public void saveMazeToFile(Boolean append) {
         String filepath = "src/main/saved_mazes/" + filename;
         try {
@@ -208,6 +215,11 @@ public class Maze {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * Writes a string to the file
+     * @param string    the string being written to the file
+     */
     public void fileWrite(String string) {
         String filepath = "src/main/saved_mazes/" + filename;
         try {
@@ -227,11 +239,12 @@ public class Maze {
     public MazeWalls[][] getMazeWalls() {return mazeWalls;}
     public int getStartingTile() {return startingTile;}
     public int getEndingTile() {return endingTile;}
-    public LinkedList getSolution() {return solution;}
+    public LinkedList getMazeSolution() {return mazeSolution;}
     public int getTilesVisited() {return tilesVisited;}
     public void resetTilesVisited() {tilesVisited = 0;}
-    public void resetSolution() {solution = new LinkedList();}
+    public void resetSolution() {
+        mazeSolution = new LinkedList();}
     public void incrementTilesVisited() {tilesVisited++;}
-    public void setSolution(LinkedList solution) {this.solution = solution;}
-    public boolean foundSolution() {return solution.numberOfItems() > 0;}
+    public void setMazeSolution(LinkedList mazeSolution) {this.mazeSolution = mazeSolution;}
+    public boolean foundSolution() {return mazeSolution.numberOfItems() > 0;}
 }
