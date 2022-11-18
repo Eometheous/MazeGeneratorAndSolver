@@ -34,7 +34,7 @@ public class Maze {
         createMazeWalls();
         solution = new LinkedList();
         tilesVisited = 0;
-        filename = length + "x" + height + "maze" + System.currentTimeMillis();
+        filename = length + "x" + height + "maze" + System.currentTimeMillis() + ".txt";
         saveMazeToFile(false);
     }
 
@@ -55,7 +55,7 @@ public class Maze {
 
         solution = new LinkedList();
         tilesVisited = 0;
-        filename = length + "x" + height + "maze" + System.currentTimeMillis();
+        filename = length + "x" + height + "maze" + System.currentTimeMillis() + ".txt";
         saveMazeToFile(false);
     }
 
