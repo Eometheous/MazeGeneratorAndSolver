@@ -24,9 +24,9 @@ public class MazeSolver {
 
         // save the maze with the solution path to the file
         maze.saveMazeToFile(true);
-        maze.fileWrite(String.format("Solution Path: %s", maze.getSolution()));
+        maze.fileWrite(String.format("Solution Path: %s", maze.getMazeSolution()));
         maze.fileWrite(String.format("Tiles Visited: %d\n",maze.getTilesVisited()));
-        return maze.getSolution();
+        return maze.getMazeSolution();
     }
     /**
      * Solves a maze using a BFS algorithm
@@ -45,9 +45,9 @@ public class MazeSolver {
 
         // save the maze with the solution path to the file
         maze.saveMazeToFile(true);
-        maze.fileWrite(String.format("Solution Path: %s", maze.getSolution()));
+        maze.fileWrite(String.format("Solution Path: %s", maze.getMazeSolution()));
         maze.fileWrite(String.format("Tiles Visited: %d\n",maze.getTilesVisited()));
-        return maze.getSolution();
+        return maze.getMazeSolution();
     }
 
     /**
