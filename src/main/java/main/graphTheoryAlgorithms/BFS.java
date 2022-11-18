@@ -145,6 +145,6 @@ public class BFS {
         wallsAt[x][y].setChar("#");
         path.add(start);
 
-        maze.setSolution(path);
+        maze.setMazeSolution(path);
     }
 }

@@ -75,6 +75,6 @@ public class DFS {
         maze.getMazeWalls()[currentPosition.getX()][currentPosition.getY()].setChar("#");
         path.add(maze.getStartingTile());
 
-        maze.setSolution(path);
+        maze.setMazeSolution(path);
     }
 }
