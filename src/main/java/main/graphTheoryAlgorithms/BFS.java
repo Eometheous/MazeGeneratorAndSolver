@@ -8,69 +8,142 @@ import main.mazes.Maze;
 import main.mazes.MazeWalls;
 
 public class BFS {
+    private static int x;
+    private static int y;
 
-    public static void breadthFirstSearch(Maze maze, boolean[][] visited, Coordinate currentCoords){
-        int x = currentCoords.getX();
-        int y = currentCoords.getY();
-
+    /**
+     * Resets the MazeWalls characters by setting it to " "
+     * @param maze  The Maze we are resetting the walls of
+     */
+    private static void resetMazeWallsCharacters(Maze maze) {
         MazeWalls[][] actualMaze = maze.getMazeWalls();
 
-        Queue<Integer> nextTilesQueue = new java.util.LinkedList<>();
-        nextTilesQueue.add(maze.nodeAt(x,y));
+        for (int i = 0; i < maze.getLength(); i++) {
+            for (int j = 0; j < maze.getHeight(); j++) {
+                actualMaze[i][j].setChar(" ");
+            }
+        }
+    }
+
+    /**
+     * Resets the coordinates to the starting position
+     */
+    private static void resetCoords(){
+        x = 0;
+        y = 0;
+    }
+
+    /**
+     * Updates the x and y coordinates with new coordinates
+     * @param coords    the coordinate being used to update x and y
+     */
+    private static void updateXYWith(Coordinate coords){
+        x = coords.getX();
+        y = coords.getY();
+    }
+
+    /**
+     * Gets the adjacency list graph representation of the maze
+     * @param maze   the maze we are getting the adjacency list of
+     * @param node   the node we want the head of
+     * @return       the head of the linked list at the node
+     */
+    private static Node getAdjListHeadAt(Maze maze, int node){ return maze.getMazeGraph().getAdjList()[node].getHead(); }
+
+    /**
+     * Depth first search algorithm that searches for the end of the maze
+     * @param maze          the maze we are searching
+     * @param visited       the tiles visited
+     */
+    public static void breadthFirstSearch(Maze maze, boolean[][] visited){
+        // reset local variables
+        resetCoords();
+        Queue<Integer> visitNextQueue = new java.util.LinkedList<>();
+
+        int start = maze.getStartingTile();
+        int end = maze.getEndingTile();
+        MazeWalls[][] wallsAt = maze.getMazeWalls();
+
+        Coordinate currentCoords = maze.positionOf(start);
+        updateXYWith(currentCoords);
+
+        visitNextQueue.add(start);
         visited[x][y] = true;
-        while(!nextTilesQueue.isEmpty() && !maze.foundSolution()){
-            int node = nextTilesQueue.poll();
-            currentCoords = maze.positionOf(node);
-            x = currentCoords.getX();
-            y = currentCoords.getY();
-            if(node == maze.getEndingTile()){
-                actualMaze[x][y].setChar(String.valueOf(maze.getTilesVisited() % 10));
+
+        // breadth fist search through the maze until we've found the solution
+        while(!maze.foundSolution()){
+            int currentTile = visitNextQueue.poll();
+            currentCoords = maze.positionOf(currentTile);
+            Node neighbors = getAdjListHeadAt(maze, currentTile);
+
+            updateXYWith(currentCoords);
+
+            // set character of walls at x y to current tiles visited
+            wallsAt[x][y].setChar(String.valueOf(maze.getTilesVisited() % 10));
+
+            // Backtracks if we find the ending location
+            if(currentTile == end){
+                // save the current maze with all the tiles visited to the file
+                maze.saveMazeToFile(true);
                 backtrack(maze, currentCoords);
                 return;
             }
-            actualMaze[x][y].setChar(String.valueOf(maze.getTilesVisited() % 10));
-            maze.incrementTilesVisited();
 
-            Node neighbors = maze.getMazeGraph().getAdjList()[node].getHead();
+            maze.incrementTilesVisited(); // This is what increments based on how many tiles we have already visited.
+
+            // Traversing through the neighboring tiles.
             while (neighbors != null) {
-                currentCoords = maze.positionOf(neighbors.getItem());
-                x = currentCoords.getX();
-                y = currentCoords.getY();
+                int neighbor = neighbors.getItem();
+                currentCoords = maze.positionOf(neighbor);
+                updateXYWith(currentCoords);
+
+                // if we haven't visited this position add the neighbor to the queue
                 if (!visited[x][y]) {
                     visited[x][y] = true;
-                    nextTilesQueue.add(neighbors.getItem());
+                    visitNextQueue.add(neighbor);
                 }
                 neighbors = neighbors.getNext();
             }
         }
     }
 
+    /**
+     * Backtracks through the maze to return the solution of the maze
+     * @param maze              maze we are backtracking through
+     * @param current  current position in the maze
+     */
     public static void backtrack(Maze maze, Coordinate current){
-        maze.display();
-        MazeWalls[][] actualMaze = maze.getMazeWalls();
-
-        for(int i = 0; i < maze.getLength(); i++){
-            for(int j = 0; j < maze.getHeight(); j++){
-                actualMaze[i][j].setChar(" ");
-            }
-        }
-
-        actualMaze[current.getX()][current.getY()].setChar("#");
-        Node tile = maze.getMazeGraph().getAdjList()[maze.nodeAt(current.getX(), current.getY())].getHead();
+        MazeWalls[][] wallsAt = maze.getMazeWalls();
         LinkedList path = new LinkedList();
-        path.add(maze.getEndingTile());
-        while (tile.getItem() != maze.getStartingTile()) {
+
+        int start = maze.getStartingTile();
+        int end = maze.getEndingTile();
+
+        resetMazeWallsCharacters(maze);
+        updateXYWith(current);
+
+        wallsAt[x][y].setChar("#");
+        Node tile = getAdjListHeadAt(maze, maze.nodeAt(x, y));
+        int tileLocation = tile.getItem();
+
+        path.add(end); // Add the ending, then we traverse backwards to the starting point of the maze.
+        while(tileLocation != start){
+            // we are at the final node in the list, add it to the solution path
             if (tile.getNext() == null){
-                path.add(tile.getItem());
-                current = maze.positionOf(tile.getItem());
-                maze.getMazeWalls()[current.getX()][current.getY()].setChar("#");
-                tile = maze.getMazeGraph().getAdjList()[tile.getItem()].getHead();
+                tileLocation = tile.getItem();
+                path.add(tileLocation);
+                current = maze.positionOf(tileLocation);
+
+                updateXYWith(current);
+
+                wallsAt[x][y].setChar("#");
+                // tile = maze.getMazeGraph().getAdjList()[tileLocation].getHead();
+                tile = getAdjListHeadAt(maze, tileLocation);
             }
             tile = tile.getNext();
         }
-        current = maze.positionOf(maze.getStartingTile());
-        maze.getMazeWalls()[current.getX()][current.getY()].setChar("#");
-        path.add(maze.getStartingTile());
+        wallsAt[x][y].setChar("#");
+        path.add(start);
 
         maze.setSolution(path);
     }
