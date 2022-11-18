@@ -17,9 +17,12 @@ public class MazeSolver {
 
         Coordinate startingCoords = getStartingCoordinate(maze);
 
-        // do DFS to find the maze solution
         maze.fileWrite("Solving Using DFS");
+
+        // do DFS to find the maze solution
         DFS.depthFirstSearch(maze,visited,startingCoords);
+
+        // save the maze with the solution path to the file
         maze.saveMazeToFile(true);
         maze.fileWrite(String.format("Solution Path: %s", maze.getSolution()));
         maze.fileWrite(String.format("Tiles Visited: %d\n",maze.getTilesVisited()));
@@ -35,11 +38,12 @@ public class MazeSolver {
         maze.resetSolution();
         boolean[][] visited = initializeFalse(maze);
 
-        // convert starting node to starting coordinates
-        Coordinate startingCoords = getStartingCoordinate(maze);
-
         maze.fileWrite("Solving Using BFS");
-        BFS.breadthFirstSearch(maze,visited,startingCoords);
+
+        // do BFS to find the maze solution
+        BFS.breadthFirstSearch(maze,visited);
+
+        // save the maze with the solution path to the file
         maze.saveMazeToFile(true);
         maze.fileWrite(String.format("Solution Path: %s", maze.getSolution()));
         maze.fileWrite(String.format("Tiles Visited: %d\n",maze.getTilesVisited()));
@@ -69,8 +73,6 @@ public class MazeSolver {
      * @return      the starting position
      */
     private static Coordinate getStartingCoordinate(Maze maze) {
-        // convert starting node to starting coordinates
-        int node = maze.getStartingTile();
-        return maze.positionOf(node);
+        return maze.positionOf(maze.getStartingTile());
     }
 }
